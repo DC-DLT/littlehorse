@@ -2,6 +2,7 @@ package io.littlehorse.sdk.wfsdk.internal;
 
 import com.google.protobuf.Message;
 import io.littlehorse.sdk.common.LHLibUtil;
+import io.littlehorse.sdk.common.exception.LHMisconfigurationException;
 import io.littlehorse.sdk.common.exception.TaskSchemaMismatchError;
 import io.littlehorse.sdk.common.proto.Comparator;
 import io.littlehorse.sdk.common.proto.Edge;
@@ -933,7 +934,13 @@ final class WorkflowThreadImpl implements WorkflowThread {
     public void registerInterruptHandler(String interruptName, ThreadFunc handler) {
         checkIfIsActive();
         String threadName = "interrupt-" + interruptName;
-        threadName = parent.addSubThread(threadName, handler);
+        // TODO - temporary workaround to enable same external event to trigger multiple interrupt handlers
+        // May cause incorrect validation in other cases
+        try {
+            threadName = parent.addSubThread(threadName, handler);
+        } catch (LHMisconfigurationException e) {
+            //Ignore
+        }
         parent.addExternalEventDefName(interruptName);
 
         spec.addInterruptDefs(InterruptDef.newBuilder()
