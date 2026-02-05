@@ -355,6 +355,7 @@ public class ThreadSpecModel extends LHSerializable<ThreadSpec> {
      * Rules for ExternalEventDef usage:
      * 1. An ExternalEventDef may only be used for an EXTERNAL_EVENT node OR
      * as an Interrupt trigger, but NOT both.
+     * TODO - 2. contradicts the actual implementation at line 380 which ensures that this eventdef is NOT used in other threadspecs
      * 2. An ExternalEventDef CAN be used as an Interrupt trigger in more
      * than one ThreadSpec.
      * 3. An ExternalEventDef CAN be used for multiple EXTERNAL_EVENT nodes in
