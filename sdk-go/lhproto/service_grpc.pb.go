@@ -56,6 +56,7 @@ const (
 	LittleHorse_ListTaskRuns_FullMethodName                = "/littlehorse.LittleHorse/ListTaskRuns"
 	LittleHorse_GetVariable_FullMethodName                 = "/littlehorse.LittleHorse/GetVariable"
 	LittleHorse_ListVariables_FullMethodName               = "/littlehorse.LittleHorse/ListVariables"
+	LittleHorse_PutVariable_FullMethodName                 = "/littlehorse.LittleHorse/PutVariable"
 	LittleHorse_PutExternalEvent_FullMethodName            = "/littlehorse.LittleHorse/PutExternalEvent"
 	LittleHorse_PutCorrelatedEvent_FullMethodName          = "/littlehorse.LittleHorse/PutCorrelatedEvent"
 	LittleHorse_GetExternalEvent_FullMethodName            = "/littlehorse.LittleHorse/GetExternalEvent"
@@ -241,6 +242,20 @@ type LittleHorseClient interface {
 	GetVariable(ctx context.Context, in *VariableId, opts ...grpc.CallOption) (*Variable, error)
 	// List all Variables from a WfRun.
 	ListVariables(ctx context.Context, in *ListVariablesRequest, opts ...grpc.CallOption) (*VariableList, error)
+	// Modifies the value of a Variable belonging to a specific `ThreadRun` of a `WfRun`.
+	//
+	// The provided value is validated (and cast where necessary) against the `VariableDef`
+	// from the `WfSpec`. Once the `Variable` has been updated, the `WfRun` is advanced, so
+	// anything that depends on the new value (for example a `WAIT_FOR_CONDITION` node) is
+	// re-evaluated immediately.
+	//
+	// Returns:<br/>
+	//   - `NOT_FOUND` if the `WfRun` or the specified `ThreadRun` does not exist.<br/>
+	//   - `INVALID_ARGUMENT` if the provided value is not compatible with the declared type
+	//     of the `Variable`.<br/>
+	//   - `FAILED_PRECONDITION` if the `Variable` is an `INHERITED_VAR`, in which case it
+	//     must be modified on the parent `WfRun`.
+	PutVariable(ctx context.Context, in *PutVariableRequest, opts ...grpc.CallOption) (*Variable, error)
 	// Post an ExternalEvent.
 	PutExternalEvent(ctx context.Context, in *PutExternalEventRequest, opts ...grpc.CallOption) (*ExternalEvent, error)
 	// Post a `CorrelatedEvent`, which is a precursor to `ExternalEvent`s.
@@ -752,6 +767,15 @@ func (c *littleHorseClient) GetVariable(ctx context.Context, in *VariableId, opt
 func (c *littleHorseClient) ListVariables(ctx context.Context, in *ListVariablesRequest, opts ...grpc.CallOption) (*VariableList, error) {
 	out := new(VariableList)
 	err := c.cc.Invoke(ctx, LittleHorse_ListVariables_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *littleHorseClient) PutVariable(ctx context.Context, in *PutVariableRequest, opts ...grpc.CallOption) (*Variable, error) {
+	out := new(Variable)
+	err := c.cc.Invoke(ctx, LittleHorse_PutVariable_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1539,6 +1563,20 @@ type LittleHorseServer interface {
 	GetVariable(context.Context, *VariableId) (*Variable, error)
 	// List all Variables from a WfRun.
 	ListVariables(context.Context, *ListVariablesRequest) (*VariableList, error)
+	// Modifies the value of a Variable belonging to a specific `ThreadRun` of a `WfRun`.
+	//
+	// The provided value is validated (and cast where necessary) against the `VariableDef`
+	// from the `WfSpec`. Once the `Variable` has been updated, the `WfRun` is advanced, so
+	// anything that depends on the new value (for example a `WAIT_FOR_CONDITION` node) is
+	// re-evaluated immediately.
+	//
+	// Returns:<br/>
+	//   - `NOT_FOUND` if the `WfRun` or the specified `ThreadRun` does not exist.<br/>
+	//   - `INVALID_ARGUMENT` if the provided value is not compatible with the declared type
+	//     of the `Variable`.<br/>
+	//   - `FAILED_PRECONDITION` if the `Variable` is an `INHERITED_VAR`, in which case it
+	//     must be modified on the parent `WfRun`.
+	PutVariable(context.Context, *PutVariableRequest) (*Variable, error)
 	// Post an ExternalEvent.
 	PutExternalEvent(context.Context, *PutExternalEventRequest) (*ExternalEvent, error)
 	// Post a `CorrelatedEvent`, which is a precursor to `ExternalEvent`s.
@@ -1836,6 +1874,9 @@ func (UnimplementedLittleHorseServer) GetVariable(context.Context, *VariableId) 
 }
 func (UnimplementedLittleHorseServer) ListVariables(context.Context, *ListVariablesRequest) (*VariableList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListVariables not implemented")
+}
+func (UnimplementedLittleHorseServer) PutVariable(context.Context, *PutVariableRequest) (*Variable, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutVariable not implemented")
 }
 func (UnimplementedLittleHorseServer) PutExternalEvent(context.Context, *PutExternalEventRequest) (*ExternalEvent, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PutExternalEvent not implemented")
@@ -2710,6 +2751,24 @@ func _LittleHorse_ListVariables_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(LittleHorseServer).ListVariables(ctx, req.(*ListVariablesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _LittleHorse_PutVariable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutVariableRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(LittleHorseServer).PutVariable(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: LittleHorse_PutVariable_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(LittleHorseServer).PutVariable(ctx, req.(*PutVariableRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -4168,6 +4227,10 @@ var LittleHorse_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListVariables",
 			Handler:    _LittleHorse_ListVariables_Handler,
+		},
+		{
+			MethodName: "PutVariable",
+			Handler:    _LittleHorse_PutVariable_Handler,
 		},
 		{
 			MethodName: "PutExternalEvent",

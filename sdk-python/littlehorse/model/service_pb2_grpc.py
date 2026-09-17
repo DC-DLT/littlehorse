@@ -231,6 +231,11 @@ class LittleHorseStub(object):
                 request_serializer=service__pb2.ListVariablesRequest.SerializeToString,
                 response_deserializer=service__pb2.VariableList.FromString,
                 _registered_method=True)
+        self.PutVariable = channel.unary_unary(
+                '/littlehorse.LittleHorse/PutVariable',
+                request_serializer=service__pb2.PutVariableRequest.SerializeToString,
+                response_deserializer=variable__pb2.Variable.FromString,
+                _registered_method=True)
         self.PutExternalEvent = channel.unary_unary(
                 '/littlehorse.LittleHorse/PutExternalEvent',
                 request_serializer=service__pb2.PutExternalEventRequest.SerializeToString,
@@ -879,6 +884,25 @@ class LittleHorseServicer(object):
 
     def ListVariables(self, request, context):
         """List all Variables from a WfRun.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PutVariable(self, request, context):
+        """Modifies the value of a Variable belonging to a specific `ThreadRun` of a `WfRun`.
+
+        The provided value is validated (and cast where necessary) against the `VariableDef`
+        from the `WfSpec`. Once the `Variable` has been updated, the `WfRun` is advanced, so
+        anything that depends on the new value (for example a `WAIT_FOR_CONDITION` node) is
+        re-evaluated immediately.
+
+        Returns:<br/>
+        - `NOT_FOUND` if the `WfRun` or the specified `ThreadRun` does not exist.<br/>
+        - `INVALID_ARGUMENT` if the provided value is not compatible with the declared type
+        of the `Variable`.<br/>
+        - `FAILED_PRECONDITION` if the `Variable` is an `INHERITED_VAR`, in which case it
+        must be modified on the parent `WfRun`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -1609,6 +1633,11 @@ def add_LittleHorseServicer_to_server(servicer, server):
                     servicer.ListVariables,
                     request_deserializer=service__pb2.ListVariablesRequest.FromString,
                     response_serializer=service__pb2.VariableList.SerializeToString,
+            ),
+            'PutVariable': grpc.unary_unary_rpc_method_handler(
+                    servicer.PutVariable,
+                    request_deserializer=service__pb2.PutVariableRequest.FromString,
+                    response_serializer=variable__pb2.Variable.SerializeToString,
             ),
             'PutExternalEvent': grpc.unary_unary_rpc_method_handler(
                     servicer.PutExternalEvent,
@@ -2943,6 +2972,33 @@ class LittleHorse(object):
             '/littlehorse.LittleHorse/ListVariables',
             service__pb2.ListVariablesRequest.SerializeToString,
             service__pb2.VariableList.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def PutVariable(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/littlehorse.LittleHorse/PutVariable',
+            service__pb2.PutVariableRequest.SerializeToString,
+            variable__pb2.Variable.FromString,
             options,
             channel_credentials,
             insecure,

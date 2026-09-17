@@ -27,6 +27,10 @@ public class ConditionalsExample {
     public static Workflow getWorkflow() {
         return new WorkflowImpl("example-conditionals", wf -> {
             WfRunVariable foo = wf.declareJsonObj("foo");
+            wf.waitForCondition(foo);
+            wf.doIf(foo, xhandler -> {
+
+            });
 
             wf.execute("task-a");
 

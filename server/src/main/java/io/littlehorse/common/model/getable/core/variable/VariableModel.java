@@ -187,6 +187,12 @@ public class VariableModel extends CoreGetable<Variable> implements CoreOutputTo
                 metadataManager.get(wfRun.getWfSpecId()).getThreadSpecs().get(threadSpecName);
         ThreadVarDefModel variableDef = threadSpec.getVarDef(id.getName());
 
+        // A Variable created via the PutVariable RPC need not be declared by the WfSpec. Such a
+        // Variable has no declared access level, so we don't push it to the output topic.
+        if (variableDef == null) {
+            return false;
+        }
+
         WfRunVariableAccessLevel accessLevel = variableDef.getAccessLevel();
         return accessLevel == WfRunVariableAccessLevel.PUBLIC_VAR
                 || accessLevel == WfRunVariableAccessLevel.INHERITED_VAR;
@@ -218,6 +224,12 @@ public class VariableModel extends CoreGetable<Variable> implements CoreOutputTo
         VariableValueModel value = getValue();
         WfSpecModel wfSpec = getWfSpec();
         ThreadVarDefModel threadVarDef = wfSpec.getAllVariables().get(this.getName());
+
+        // The WfSpec doesn't necessarily declare every Variable: one can be created directly via
+        // the PutVariable RPC. Without a ThreadVarDef there is no index configuration to apply.
+        if (threadVarDef == null) {
+            return List.of();
+        }
 
         TagStorageType indexType = TagStorageType.LOCAL;
 

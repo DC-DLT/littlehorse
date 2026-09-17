@@ -93,6 +93,29 @@ public class WfRunVerifier extends AbstractVerifier {
         return this;
     }
 
+    /**
+     * Modifies the value of a Variable on the specified ThreadRun via the PutVariable RPC.
+     */
+    public WfRunVerifier thenPutVariable(int threadRunNumber, String variableName, Object newValue) {
+        steps.add(new PutVariableStep(
+                threadRunNumber, variableName, LHLibUtil.objToVarVal(newValue), null, steps.size() + 1));
+        return this;
+    }
+
+    /**
+     * Modifies the value of a Variable on the specified ThreadRun via the PutVariable RPC, passing
+     * any resulting error to the provided Consumer rather than failing the test.
+     */
+    public WfRunVerifier thenPutVariable(
+            int threadRunNumber,
+            String variableName,
+            Object newValue,
+            Consumer<StatusRuntimeException> exceptionConsumer) {
+        steps.add(new PutVariableStep(
+                threadRunNumber, variableName, LHLibUtil.objToVarVal(newValue), exceptionConsumer, steps.size() + 1));
+        return this;
+    }
+
     public WfRunVerifier thenRescueThreadRun(int threadRunNumber, boolean skipCurrentNode) {
         steps.add(new RescueThreadRunStep(threadRunNumber, skipCurrentNode, null, steps.size() + 1));
         return this;

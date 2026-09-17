@@ -177,6 +177,21 @@ service LittleHorse {
   // List all Variables from a WfRun.
   rpc ListVariables(ListVariablesRequest) returns (VariableList) {}
 
+  // Modifies the value of a Variable belonging to a specific `ThreadRun` of a `WfRun`.
+  //
+  // The provided value is validated (and cast where necessary) against the `VariableDef`
+  // from the `WfSpec`. Once the `Variable` has been updated, the `WfRun` is advanced, so
+  // anything that depends on the new value (for example a `WAIT_FOR_CONDITION` node) is
+  // re-evaluated immediately.
+  //
+  // Returns:<br/>
+  // - `NOT_FOUND` if the `WfRun` or the specified `ThreadRun` does not exist.<br/>
+  // - `INVALID_ARGUMENT` if the provided value is not compatible with the declared type
+  //   of the `Variable`.<br/>
+  // - `FAILED_PRECONDITION` if the `Variable` is an `INHERITED_VAR`, in which case it
+  //   must be modified on the parent `WfRun`.
+  rpc PutVariable(PutVariableRequest) returns (Variable) {}
+
   // Post an ExternalEvent.
   rpc PutExternalEvent(PutExternalEventRequest) returns (ExternalEvent) {}
 
@@ -1375,6 +1390,16 @@ message NodeRunList {
   // has returned all results. If it is set, you can pass it into your next request
   // to resume searching where your previous request left off.
   optional bytes bookmark = 2;
+}
+
+// Modify the value of a single Variable belonging to a WfRun.
+message PutVariableRequest {
+  // The ID of the Variable to modify. Note that the VariableId contains the WfRunId,
+  // the number of the owning ThreadRun, and the name of the Variable.
+  VariableId id = 1;
+
+  // The new value for the Variable.
+  VariableValue value = 2;
 }
 
 // List all Variables for a specific WfRun. Note that List requests return actual Variable Objects,
