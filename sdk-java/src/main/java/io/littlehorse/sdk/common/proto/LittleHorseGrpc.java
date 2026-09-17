@@ -1128,6 +1128,37 @@ public final class LittleHorseGrpc {
     return getListVariablesMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<io.littlehorse.sdk.common.proto.PutVariableRequest,
+      io.littlehorse.sdk.common.proto.Variable> getPutVariableMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "PutVariable",
+      requestType = io.littlehorse.sdk.common.proto.PutVariableRequest.class,
+      responseType = io.littlehorse.sdk.common.proto.Variable.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<io.littlehorse.sdk.common.proto.PutVariableRequest,
+      io.littlehorse.sdk.common.proto.Variable> getPutVariableMethod() {
+    io.grpc.MethodDescriptor<io.littlehorse.sdk.common.proto.PutVariableRequest, io.littlehorse.sdk.common.proto.Variable> getPutVariableMethod;
+    if ((getPutVariableMethod = LittleHorseGrpc.getPutVariableMethod) == null) {
+      synchronized (LittleHorseGrpc.class) {
+        if ((getPutVariableMethod = LittleHorseGrpc.getPutVariableMethod) == null) {
+          LittleHorseGrpc.getPutVariableMethod = getPutVariableMethod =
+              io.grpc.MethodDescriptor.<io.littlehorse.sdk.common.proto.PutVariableRequest, io.littlehorse.sdk.common.proto.Variable>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "PutVariable"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  io.littlehorse.sdk.common.proto.PutVariableRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  io.littlehorse.sdk.common.proto.Variable.getDefaultInstance()))
+              .setSchemaDescriptor(new LittleHorseMethodDescriptorSupplier("PutVariable"))
+              .build();
+        }
+      }
+    }
+    return getPutVariableMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<io.littlehorse.sdk.common.proto.PutExternalEventRequest,
       io.littlehorse.sdk.common.proto.ExternalEvent> getPutExternalEventMethod;
 
@@ -3814,6 +3845,26 @@ public final class LittleHorseGrpc {
 
     /**
      * <pre>
+     * Modifies the value of a Variable belonging to a specific `ThreadRun` of a `WfRun`.
+     * The provided value is validated (and cast where necessary) against the `VariableDef`
+     * from the `WfSpec`. Once the `Variable` has been updated, the `WfRun` is advanced, so
+     * anything that depends on the new value (for example a `WAIT_FOR_CONDITION` node) is
+     * re-evaluated immediately.
+     * Returns:&lt;br/&gt;
+     * - `NOT_FOUND` if the `WfRun` or the specified `ThreadRun` does not exist.&lt;br/&gt;
+     * - `INVALID_ARGUMENT` if the provided value is not compatible with the declared type
+     *   of the `Variable`.&lt;br/&gt;
+     * - `FAILED_PRECONDITION` if the `Variable` is an `INHERITED_VAR`, in which case it
+     *   must be modified on the parent `WfRun`.
+     * </pre>
+     */
+    default void putVariable(io.littlehorse.sdk.common.proto.PutVariableRequest request,
+        io.grpc.stub.StreamObserver<io.littlehorse.sdk.common.proto.Variable> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getPutVariableMethod(), responseObserver);
+    }
+
+    /**
+     * <pre>
      * Post an ExternalEvent.
      * </pre>
      */
@@ -5018,6 +5069,27 @@ public final class LittleHorseGrpc {
         io.grpc.stub.StreamObserver<io.littlehorse.sdk.common.proto.VariableList> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getListVariablesMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     * <pre>
+     * Modifies the value of a Variable belonging to a specific `ThreadRun` of a `WfRun`.
+     * The provided value is validated (and cast where necessary) against the `VariableDef`
+     * from the `WfSpec`. Once the `Variable` has been updated, the `WfRun` is advanced, so
+     * anything that depends on the new value (for example a `WAIT_FOR_CONDITION` node) is
+     * re-evaluated immediately.
+     * Returns:&lt;br/&gt;
+     * - `NOT_FOUND` if the `WfRun` or the specified `ThreadRun` does not exist.&lt;br/&gt;
+     * - `INVALID_ARGUMENT` if the provided value is not compatible with the declared type
+     *   of the `Variable`.&lt;br/&gt;
+     * - `FAILED_PRECONDITION` if the `Variable` is an `INHERITED_VAR`, in which case it
+     *   must be modified on the parent `WfRun`.
+     * </pre>
+     */
+    public void putVariable(io.littlehorse.sdk.common.proto.PutVariableRequest request,
+        io.grpc.stub.StreamObserver<io.littlehorse.sdk.common.proto.Variable> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getPutVariableMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -6255,6 +6327,26 @@ public final class LittleHorseGrpc {
 
     /**
      * <pre>
+     * Modifies the value of a Variable belonging to a specific `ThreadRun` of a `WfRun`.
+     * The provided value is validated (and cast where necessary) against the `VariableDef`
+     * from the `WfSpec`. Once the `Variable` has been updated, the `WfRun` is advanced, so
+     * anything that depends on the new value (for example a `WAIT_FOR_CONDITION` node) is
+     * re-evaluated immediately.
+     * Returns:&lt;br/&gt;
+     * - `NOT_FOUND` if the `WfRun` or the specified `ThreadRun` does not exist.&lt;br/&gt;
+     * - `INVALID_ARGUMENT` if the provided value is not compatible with the declared type
+     *   of the `Variable`.&lt;br/&gt;
+     * - `FAILED_PRECONDITION` if the `Variable` is an `INHERITED_VAR`, in which case it
+     *   must be modified on the parent `WfRun`.
+     * </pre>
+     */
+    public io.littlehorse.sdk.common.proto.Variable putVariable(io.littlehorse.sdk.common.proto.PutVariableRequest request) throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
+          getChannel(), getPutVariableMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
      * Post an ExternalEvent.
      * </pre>
      */
@@ -7414,6 +7506,26 @@ public final class LittleHorseGrpc {
     public io.littlehorse.sdk.common.proto.VariableList listVariables(io.littlehorse.sdk.common.proto.ListVariablesRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getListVariablesMethod(), getCallOptions(), request);
+    }
+
+    /**
+     * <pre>
+     * Modifies the value of a Variable belonging to a specific `ThreadRun` of a `WfRun`.
+     * The provided value is validated (and cast where necessary) against the `VariableDef`
+     * from the `WfSpec`. Once the `Variable` has been updated, the `WfRun` is advanced, so
+     * anything that depends on the new value (for example a `WAIT_FOR_CONDITION` node) is
+     * re-evaluated immediately.
+     * Returns:&lt;br/&gt;
+     * - `NOT_FOUND` if the `WfRun` or the specified `ThreadRun` does not exist.&lt;br/&gt;
+     * - `INVALID_ARGUMENT` if the provided value is not compatible with the declared type
+     *   of the `Variable`.&lt;br/&gt;
+     * - `FAILED_PRECONDITION` if the `Variable` is an `INHERITED_VAR`, in which case it
+     *   must be modified on the parent `WfRun`.
+     * </pre>
+     */
+    public io.littlehorse.sdk.common.proto.Variable putVariable(io.littlehorse.sdk.common.proto.PutVariableRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getPutVariableMethod(), getCallOptions(), request);
     }
 
     /**
@@ -8604,6 +8716,27 @@ public final class LittleHorseGrpc {
 
     /**
      * <pre>
+     * Modifies the value of a Variable belonging to a specific `ThreadRun` of a `WfRun`.
+     * The provided value is validated (and cast where necessary) against the `VariableDef`
+     * from the `WfSpec`. Once the `Variable` has been updated, the `WfRun` is advanced, so
+     * anything that depends on the new value (for example a `WAIT_FOR_CONDITION` node) is
+     * re-evaluated immediately.
+     * Returns:&lt;br/&gt;
+     * - `NOT_FOUND` if the `WfRun` or the specified `ThreadRun` does not exist.&lt;br/&gt;
+     * - `INVALID_ARGUMENT` if the provided value is not compatible with the declared type
+     *   of the `Variable`.&lt;br/&gt;
+     * - `FAILED_PRECONDITION` if the `Variable` is an `INHERITED_VAR`, in which case it
+     *   must be modified on the parent `WfRun`.
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<io.littlehorse.sdk.common.proto.Variable> putVariable(
+        io.littlehorse.sdk.common.proto.PutVariableRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getPutVariableMethod(), getCallOptions()), request);
+    }
+
+    /**
+     * <pre>
      * Post an ExternalEvent.
      * </pre>
      */
@@ -9454,78 +9587,79 @@ public final class LittleHorseGrpc {
   private static final int METHODID_LIST_TASK_RUNS = 33;
   private static final int METHODID_GET_VARIABLE = 34;
   private static final int METHODID_LIST_VARIABLES = 35;
-  private static final int METHODID_PUT_EXTERNAL_EVENT = 36;
-  private static final int METHODID_PUT_CORRELATED_EVENT = 37;
-  private static final int METHODID_GET_EXTERNAL_EVENT = 38;
-  private static final int METHODID_GET_CORRELATED_EVENT = 39;
-  private static final int METHODID_AWAIT_WORKFLOW_EVENT = 40;
-  private static final int METHODID_GET_WORKFLOW_EVENT_DEF = 41;
-  private static final int METHODID_GET_WORKFLOW_EVENT = 42;
-  private static final int METHODID_LIST_EXTERNAL_EVENTS = 43;
-  private static final int METHODID_LIST_WORKFLOW_EVENTS = 44;
-  private static final int METHODID_SEARCH_WF_RUN = 45;
-  private static final int METHODID_PUT_WORKFLOW_MIGRATION_PLAN = 46;
-  private static final int METHODID_GET_WORKFLOW_MIGRATION_PLAN = 47;
-  private static final int METHODID_DELETE_WORKFLOW_MIGRATION_PLAN = 48;
-  private static final int METHODID_APPLY_WORKFLOW_MIGRATION_PLAN = 49;
-  private static final int METHODID_SEARCH_WORKFLOW_MIGRATION_PLAN = 50;
-  private static final int METHODID_SEARCH_CORRELATED_EVENT = 51;
-  private static final int METHODID_SEARCH_NODE_RUN = 52;
-  private static final int METHODID_SEARCH_TASK_RUN = 53;
-  private static final int METHODID_SEARCH_USER_TASK_RUN = 54;
-  private static final int METHODID_SEARCH_VARIABLE = 55;
-  private static final int METHODID_SEARCH_EXTERNAL_EVENT = 56;
-  private static final int METHODID_SEARCH_WORKFLOW_EVENT = 57;
-  private static final int METHODID_SEARCH_TASK_DEF = 58;
-  private static final int METHODID_SEARCH_USER_TASK_DEF = 59;
-  private static final int METHODID_SEARCH_WF_SPEC = 60;
-  private static final int METHODID_SEARCH_EXTERNAL_EVENT_DEF = 61;
-  private static final int METHODID_SEARCH_WORKFLOW_EVENT_DEF = 62;
-  private static final int METHODID_SEARCH_TENANT = 63;
-  private static final int METHODID_SEARCH_PRINCIPAL = 64;
-  private static final int METHODID_SEARCH_QUOTA = 65;
-  private static final int METHODID_SEARCH_STRUCT_DEF = 66;
-  private static final int METHODID_GET_INACTIVE_THREAD_RUN = 67;
-  private static final int METHODID_REGISTER_TASK_WORKER = 68;
-  private static final int METHODID_REPORT_TASK = 69;
-  private static final int METHODID_PUT_CHECKPOINT = 70;
-  private static final int METHODID_GET_CHECKPOINT = 71;
-  private static final int METHODID_STOP_WF_RUN = 72;
-  private static final int METHODID_RESUME_WF_RUN = 73;
-  private static final int METHODID_RESCUE_THREAD_RUN = 74;
-  private static final int METHODID_DELETE_WF_RUN = 75;
-  private static final int METHODID_DELETE_TASK_DEF = 76;
-  private static final int METHODID_DELETE_STRUCT_DEF = 77;
-  private static final int METHODID_DELETE_WF_SPEC = 78;
-  private static final int METHODID_DELETE_USER_TASK_DEF = 79;
-  private static final int METHODID_DELETE_EXTERNAL_EVENT_DEF = 80;
-  private static final int METHODID_DELETE_CORRELATED_EVENT = 81;
-  private static final int METHODID_DELETE_WORKFLOW_EVENT_DEF = 82;
-  private static final int METHODID_DELETE_PRINCIPAL = 83;
-  private static final int METHODID_DELETE_QUOTA = 84;
-  private static final int METHODID_DELETE_SCHEDULED_WF_RUN = 85;
-  private static final int METHODID_CREATE_BULK_JOB = 86;
-  private static final int METHODID_GET_BULK_JOB = 87;
-  private static final int METHODID_SEARCH_BULK_JOB = 88;
-  private static final int METHODID_DELETE_BULK_JOB = 89;
-  private static final int METHODID_GET_TASK_DEF_METRICS_WINDOW = 90;
-  private static final int METHODID_GET_WF_SPEC_METRICS_WINDOW = 91;
-  private static final int METHODID_LIST_TASK_METRICS = 92;
-  private static final int METHODID_LIST_QUOTA_USAGE_METRICS = 93;
-  private static final int METHODID_LIST_WF_METRICS = 94;
-  private static final int METHODID_GET_METRIC_WINDOW = 95;
-  private static final int METHODID_SEARCH_WF_METRIC_WINDOW = 96;
-  private static final int METHODID_PUT_TENANT = 97;
-  private static final int METHODID_GET_TENANT = 98;
-  private static final int METHODID_PUT_QUOTA = 99;
-  private static final int METHODID_GET_QUOTA = 100;
-  private static final int METHODID_PUT_PRINCIPAL = 101;
-  private static final int METHODID_GET_PRINCIPAL = 102;
-  private static final int METHODID_WHOAMI = 103;
-  private static final int METHODID_GET_SERVER_VERSION = 104;
-  private static final int METHODID_COUNT_NODE_RUN = 105;
-  private static final int METHODID_COUNT_TASK_RUN = 106;
-  private static final int METHODID_POLL_TASK = 107;
+  private static final int METHODID_PUT_VARIABLE = 36;
+  private static final int METHODID_PUT_EXTERNAL_EVENT = 37;
+  private static final int METHODID_PUT_CORRELATED_EVENT = 38;
+  private static final int METHODID_GET_EXTERNAL_EVENT = 39;
+  private static final int METHODID_GET_CORRELATED_EVENT = 40;
+  private static final int METHODID_AWAIT_WORKFLOW_EVENT = 41;
+  private static final int METHODID_GET_WORKFLOW_EVENT_DEF = 42;
+  private static final int METHODID_GET_WORKFLOW_EVENT = 43;
+  private static final int METHODID_LIST_EXTERNAL_EVENTS = 44;
+  private static final int METHODID_LIST_WORKFLOW_EVENTS = 45;
+  private static final int METHODID_SEARCH_WF_RUN = 46;
+  private static final int METHODID_PUT_WORKFLOW_MIGRATION_PLAN = 47;
+  private static final int METHODID_GET_WORKFLOW_MIGRATION_PLAN = 48;
+  private static final int METHODID_DELETE_WORKFLOW_MIGRATION_PLAN = 49;
+  private static final int METHODID_APPLY_WORKFLOW_MIGRATION_PLAN = 50;
+  private static final int METHODID_SEARCH_WORKFLOW_MIGRATION_PLAN = 51;
+  private static final int METHODID_SEARCH_CORRELATED_EVENT = 52;
+  private static final int METHODID_SEARCH_NODE_RUN = 53;
+  private static final int METHODID_SEARCH_TASK_RUN = 54;
+  private static final int METHODID_SEARCH_USER_TASK_RUN = 55;
+  private static final int METHODID_SEARCH_VARIABLE = 56;
+  private static final int METHODID_SEARCH_EXTERNAL_EVENT = 57;
+  private static final int METHODID_SEARCH_WORKFLOW_EVENT = 58;
+  private static final int METHODID_SEARCH_TASK_DEF = 59;
+  private static final int METHODID_SEARCH_USER_TASK_DEF = 60;
+  private static final int METHODID_SEARCH_WF_SPEC = 61;
+  private static final int METHODID_SEARCH_EXTERNAL_EVENT_DEF = 62;
+  private static final int METHODID_SEARCH_WORKFLOW_EVENT_DEF = 63;
+  private static final int METHODID_SEARCH_TENANT = 64;
+  private static final int METHODID_SEARCH_PRINCIPAL = 65;
+  private static final int METHODID_SEARCH_QUOTA = 66;
+  private static final int METHODID_SEARCH_STRUCT_DEF = 67;
+  private static final int METHODID_GET_INACTIVE_THREAD_RUN = 68;
+  private static final int METHODID_REGISTER_TASK_WORKER = 69;
+  private static final int METHODID_REPORT_TASK = 70;
+  private static final int METHODID_PUT_CHECKPOINT = 71;
+  private static final int METHODID_GET_CHECKPOINT = 72;
+  private static final int METHODID_STOP_WF_RUN = 73;
+  private static final int METHODID_RESUME_WF_RUN = 74;
+  private static final int METHODID_RESCUE_THREAD_RUN = 75;
+  private static final int METHODID_DELETE_WF_RUN = 76;
+  private static final int METHODID_DELETE_TASK_DEF = 77;
+  private static final int METHODID_DELETE_STRUCT_DEF = 78;
+  private static final int METHODID_DELETE_WF_SPEC = 79;
+  private static final int METHODID_DELETE_USER_TASK_DEF = 80;
+  private static final int METHODID_DELETE_EXTERNAL_EVENT_DEF = 81;
+  private static final int METHODID_DELETE_CORRELATED_EVENT = 82;
+  private static final int METHODID_DELETE_WORKFLOW_EVENT_DEF = 83;
+  private static final int METHODID_DELETE_PRINCIPAL = 84;
+  private static final int METHODID_DELETE_QUOTA = 85;
+  private static final int METHODID_DELETE_SCHEDULED_WF_RUN = 86;
+  private static final int METHODID_CREATE_BULK_JOB = 87;
+  private static final int METHODID_GET_BULK_JOB = 88;
+  private static final int METHODID_SEARCH_BULK_JOB = 89;
+  private static final int METHODID_DELETE_BULK_JOB = 90;
+  private static final int METHODID_GET_TASK_DEF_METRICS_WINDOW = 91;
+  private static final int METHODID_GET_WF_SPEC_METRICS_WINDOW = 92;
+  private static final int METHODID_LIST_TASK_METRICS = 93;
+  private static final int METHODID_LIST_QUOTA_USAGE_METRICS = 94;
+  private static final int METHODID_LIST_WF_METRICS = 95;
+  private static final int METHODID_GET_METRIC_WINDOW = 96;
+  private static final int METHODID_SEARCH_WF_METRIC_WINDOW = 97;
+  private static final int METHODID_PUT_TENANT = 98;
+  private static final int METHODID_GET_TENANT = 99;
+  private static final int METHODID_PUT_QUOTA = 100;
+  private static final int METHODID_GET_QUOTA = 101;
+  private static final int METHODID_PUT_PRINCIPAL = 102;
+  private static final int METHODID_GET_PRINCIPAL = 103;
+  private static final int METHODID_WHOAMI = 104;
+  private static final int METHODID_GET_SERVER_VERSION = 105;
+  private static final int METHODID_COUNT_NODE_RUN = 106;
+  private static final int METHODID_COUNT_TASK_RUN = 107;
+  private static final int METHODID_POLL_TASK = 108;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -9687,6 +9821,10 @@ public final class LittleHorseGrpc {
         case METHODID_LIST_VARIABLES:
           serviceImpl.listVariables((io.littlehorse.sdk.common.proto.ListVariablesRequest) request,
               (io.grpc.stub.StreamObserver<io.littlehorse.sdk.common.proto.VariableList>) responseObserver);
+          break;
+        case METHODID_PUT_VARIABLE:
+          serviceImpl.putVariable((io.littlehorse.sdk.common.proto.PutVariableRequest) request,
+              (io.grpc.stub.StreamObserver<io.littlehorse.sdk.common.proto.Variable>) responseObserver);
           break;
         case METHODID_PUT_EXTERNAL_EVENT:
           serviceImpl.putExternalEvent((io.littlehorse.sdk.common.proto.PutExternalEventRequest) request,
@@ -10245,6 +10383,13 @@ public final class LittleHorseGrpc {
               io.littlehorse.sdk.common.proto.ListVariablesRequest,
               io.littlehorse.sdk.common.proto.VariableList>(
                 service, METHODID_LIST_VARIABLES)))
+        .addMethod(
+          getPutVariableMethod(),
+          io.grpc.stub.ServerCalls.asyncUnaryCall(
+            new MethodHandlers<
+              io.littlehorse.sdk.common.proto.PutVariableRequest,
+              io.littlehorse.sdk.common.proto.Variable>(
+                service, METHODID_PUT_VARIABLE)))
         .addMethod(
           getPutExternalEventMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
@@ -10833,6 +10978,7 @@ public final class LittleHorseGrpc {
               .addMethod(getListTaskRunsMethod())
               .addMethod(getGetVariableMethod())
               .addMethod(getListVariablesMethod())
+              .addMethod(getPutVariableMethod())
               .addMethod(getPutExternalEventMethod())
               .addMethod(getPutCorrelatedEventMethod())
               .addMethod(getGetExternalEventMethod())

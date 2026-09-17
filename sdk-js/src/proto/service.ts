@@ -1990,6 +1990,26 @@ export interface NodeRunList {
     bookmark?: Uint8Array;
 }
 /**
+ * Modify the value of a single Variable belonging to a WfRun.
+ *
+ * @generated from protobuf message littlehorse.PutVariableRequest
+ */
+export interface PutVariableRequest {
+    /**
+     * The ID of the Variable to modify. Note that the VariableId contains the WfRunId,
+     * the number of the owning ThreadRun, and the name of the Variable.
+     *
+     * @generated from protobuf field: littlehorse.VariableId id = 1
+     */
+    id?: VariableId;
+    /**
+     * The new value for the Variable.
+     *
+     * @generated from protobuf field: littlehorse.VariableValue value = 2
+     */
+    value?: VariableValue;
+}
+/**
  * List all Variables for a specific WfRun. Note that List requests return actual Variable Objects,
  * not VariableId's.
  *
@@ -7352,6 +7372,59 @@ class NodeRunList$Type extends MessageType<NodeRunList> {
  */
 export const NodeRunList = new NodeRunList$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class PutVariableRequest$Type extends MessageType<PutVariableRequest> {
+    constructor() {
+        super("littlehorse.PutVariableRequest", [
+            { no: 1, name: "id", kind: "message", T: () => VariableId },
+            { no: 2, name: "value", kind: "message", T: () => VariableValue }
+        ]);
+    }
+    create(value?: PartialMessage<PutVariableRequest>): PutVariableRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        if (value !== undefined)
+            reflectionMergePartial<PutVariableRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: PutVariableRequest): PutVariableRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* littlehorse.VariableId id */ 1:
+                    message.id = VariableId.internalBinaryRead(reader, reader.uint32(), options, message.id);
+                    break;
+                case /* littlehorse.VariableValue value */ 2:
+                    message.value = VariableValue.internalBinaryRead(reader, reader.uint32(), options, message.value);
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: PutVariableRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* littlehorse.VariableId id = 1; */
+        if (message.id)
+            VariableId.internalBinaryWrite(message.id, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* littlehorse.VariableValue value = 2; */
+        if (message.value)
+            VariableValue.internalBinaryWrite(message.value, writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message littlehorse.PutVariableRequest
+ */
+export const PutVariableRequest = new PutVariableRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class ListVariablesRequest$Type extends MessageType<ListVariablesRequest> {
     constructor() {
         super("littlehorse.ListVariablesRequest", [
@@ -9833,6 +9906,7 @@ export const LittleHorse = new ServiceType("littlehorse.LittleHorse", [
     { name: "ListTaskRuns", options: {}, I: ListTaskRunsRequest, O: TaskRunList },
     { name: "GetVariable", options: {}, I: VariableId, O: Variable },
     { name: "ListVariables", options: {}, I: ListVariablesRequest, O: VariableList },
+    { name: "PutVariable", options: {}, I: PutVariableRequest, O: Variable },
     { name: "PutExternalEvent", options: {}, I: PutExternalEventRequest, O: ExternalEvent },
     { name: "PutCorrelatedEvent", options: {}, I: PutCorrelatedEventRequest, O: CorrelatedEvent },
     { name: "GetExternalEvent", options: {}, I: ExternalEventId, O: ExternalEvent },

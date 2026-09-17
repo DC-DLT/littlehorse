@@ -86,6 +86,7 @@ public class CommandModel extends AbstractCommand<Command> {
     private DeleteMetricWindowModel deleteMetricWindow;
     private UpdateCountedTagModel updateCountedTag;
     private ApplyWorkflowMigrationRequestModel applyWorkflowMigrationPlan;
+    private PutVariableRequestModel putVariable;
 
     public Class<Command> getProtoBaseClass() {
         return Command.class;
@@ -213,6 +214,9 @@ public class CommandModel extends AbstractCommand<Command> {
                 break;
             case UPDATE_COUNTED_TAG:
                 out.setUpdateCountedTag(updateCountedTag.toProto());
+                break;
+            case PUT_VARIABLE:
+                out.setPutVariable(putVariable.toProto());
                 break;
             case COMMAND_NOT_SET:
                 throw new RuntimeException("Not possible");
@@ -355,6 +359,9 @@ public class CommandModel extends AbstractCommand<Command> {
                 applyWorkflowMigrationPlan = LHSerializable.fromProto(
                         p.getApplyWorkflowMigrationPlan(), ApplyWorkflowMigrationRequestModel.class, context);
                 break;
+            case PUT_VARIABLE:
+                putVariable = LHSerializable.fromProto(p.getPutVariable(), PutVariableRequestModel.class, context);
+                break;
             case COMMAND_NOT_SET:
                 throw new RuntimeException("Not possible");
         }
@@ -430,6 +437,8 @@ public class CommandModel extends AbstractCommand<Command> {
                 return updateCountedTag;
             case APPLY_WORKFLOW_MIGRATION_PLAN:
                 return applyWorkflowMigrationPlan;
+            case PUT_VARIABLE:
+                return putVariable;
             case COMMAND_NOT_SET:
         }
         throw new IllegalStateException("Not possible to have missing subcommand.");
@@ -539,6 +548,9 @@ public class CommandModel extends AbstractCommand<Command> {
         } else if (cls.equals(ApplyWorkflowMigrationRequestModel.class)) {
             type = CommandCase.APPLY_WORKFLOW_MIGRATION_PLAN;
             applyWorkflowMigrationPlan = (ApplyWorkflowMigrationRequestModel) cmd;
+        } else if (cls.equals(PutVariableRequestModel.class)) {
+            type = CommandCase.PUT_VARIABLE;
+            putVariable = (PutVariableRequestModel) cmd;
         } else {
             throw new IllegalArgumentException("Unrecognized SubCommand class: " + cls.getName());
         }
